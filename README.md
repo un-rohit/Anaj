@@ -138,8 +138,8 @@ The platform is fully bilingual: **Hindi (हिन्दी)** and **English**.
 | Phase | Focus | Status |
 |-------|-------|--------|
 | 1 | Foundation, DB schema, i18n, monorepo | ✅ Complete |
-| 2 | Backend API: auth, farmers, products, rates | 🔜 Next |
-| 3 | Admin website: all modules | 🔜 Planned |
+| 2 | Backend API: auth, farmers, products, rates, requests | ✅ Complete |
+| 3 | Admin website: all modules | 🔜 Next |
 | 4 | Farmer mobile app: all screens | 🔜 Planned |
 | 5 | Procurement operations: quality, payment | 🔜 Planned |
 | 6 | Production readiness, testing, deployment | 🔜 Planned |
