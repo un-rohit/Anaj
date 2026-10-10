@@ -71,19 +71,33 @@ app.use(
   }),
 );
 
+import { authRouter } from './modules/auth/auth.router.js';
+import { farmerRouter } from './modules/farmers/farmer.router.js';
+import { productRouter } from './modules/products/product.router.js';
+import { purchaseRateRouter } from './modules/purchase-rates/purchase-rate.router.js';
+import { sellRequestRouter } from './modules/sell-requests/sell-request.router.js';
+import { companyRouter } from './modules/company/company.router.js';
+import { auditLogRouter } from './modules/audit-logs/audit-log.router.js';
+import { dashboardRouter } from './modules/dashboard/dashboard.router.js';
+import { openApiSpec } from './lib/openapi.js';
+
 // ---------------------------------------------------------------------------
 // Routes
 // ---------------------------------------------------------------------------
 app.use('/health', healthRouter);
 
-// All API routes are versioned under /api/v1
-// Additional routers added in Phase 2:
-// app.use('/api/v1/auth', authRouter);
-// app.use('/api/v1/farmers', farmerRouter);
-// app.use('/api/v1/products', productRouter);
-// app.use('/api/v1/rates', rateRouter);
-// app.use('/api/v1/sell-requests', sellRequestRouter);
-// ... etc.
+// Versioned API routes under /api/v1
+app.get('/api/v1/openapi.json', (_req, res) => {
+  res.json(openApiSpec);
+});
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/farmers', farmerRouter);
+app.use('/api/v1/products', productRouter);
+app.use('/api/v1/purchase-rates', purchaseRateRouter);
+app.use('/api/v1/sell-requests', sellRequestRouter);
+app.use('/api/v1/company', companyRouter);
+app.use('/api/v1/audit-logs', auditLogRouter);
+app.use('/api/v1/dashboard', dashboardRouter);
 
 // ---------------------------------------------------------------------------
 // 404 and error handling (must be last)
