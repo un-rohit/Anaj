@@ -2,8 +2,8 @@ import type { Prisma } from '@prisma/client';
 import { prisma } from '../../lib/prisma.js';
 
 export interface DashboardFilterParams {
-  startDate?: string | Date;
-  endDate?: string | Date;
+  startDate?: string | Date | undefined;
+  endDate?: string | Date | undefined;
 }
 
 export class DashboardService {

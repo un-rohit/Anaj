@@ -7,7 +7,7 @@ export interface CompanyPublicInfo {
   ownerName: string;
   supportPhone: string;
   supportEmail: string;
-  emailWarningNote?: string;
+  emailWarningNote?: string | undefined;
   address: string;
   addressHi: string;
   minPurchaseQuantityKg: number;

@@ -1,4 +1,4 @@
-import type { Language, Unit } from '@prisma/client';
+import { Prisma, type Language, type Unit } from '@prisma/client';
 import { prisma } from '../../lib/prisma.js';
 import { AppError } from '../../middleware/error-handler.js';
 import { logAudit } from '../../lib/audit.js';
@@ -32,8 +32,9 @@ export class ProductService {
    * List products with their active purchase rates and localized/full translations
    */
   async listProducts(language?: Language, includeInactive = false) {
+    const where: Prisma.ProductWhereInput = includeInactive ? {} : { isActive: true };
     const products = await prisma.product.findMany({
-      where: includeInactive ? undefined : { isActive: true },
+      where,
       orderBy: { sortOrder: 'asc' },
       include: {
         translations: true,
