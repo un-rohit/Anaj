@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "ANAJ — Agricultural Procurement Platform",
+  "packageManager": "npm@11.17.0",
   "workspaces": [
     "apps/*",
     "packages/*"
