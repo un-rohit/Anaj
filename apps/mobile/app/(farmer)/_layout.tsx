@@ -34,6 +34,13 @@ export default function FarmerLayout() {
         name="profile"
         options={{ title: t('nav.profile', 'प्रोफाइल'), tabBarIcon: ({ color }) => <TabIcon emoji="👤" color={color} /> }}
       />
+      <Tabs.Screen
+        name="sell"
+        options={{
+          href: null,
+          headerShown: false,
+        }}
+      />
     </Tabs>
   );
 }

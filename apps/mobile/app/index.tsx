@@ -12,21 +12,25 @@
 
 import { Redirect } from 'expo-router';
 import { useLanguageStore } from '@/store/language-store';
+import { useAuthStore } from '@/store/auth-store';
 
 export default function Index() {
   const isFirstLaunch = useLanguageStore((s) => s.isFirstLaunch);
-  const isLoading = useLanguageStore((s) => s.isLoading);
+  const isLanguageLoading = useLanguageStore((s) => s.isLoading);
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const isAuthLoading = useAuthStore((s) => s.isLoading);
 
-  if (isLoading) {
-    return null; // Splash screen handles the wait
+  if (isLanguageLoading || isAuthLoading) {
+    return null;
   }
 
   if (isFirstLaunch) {
     return <Redirect href="/(auth)/language-select" />;
   }
 
-  // TODO Phase 4: check auth token from SecureStore
-  // If authenticated → redirect to /(farmer)/home
-  // If not authenticated → redirect to /(auth)/welcome
+  if (isAuthenticated) {
+    return <Redirect href="/(farmer)/home" />;
+  }
+
   return <Redirect href="/(auth)/welcome" />;
 }

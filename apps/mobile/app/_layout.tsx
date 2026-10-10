@@ -13,9 +13,20 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { I18nextProvider } from 'react-i18next';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 import i18n, { initI18n, resolveInitialLanguage } from '@/i18n';
 import { useLanguageStore } from '@/store/language-store';
+import { useAuthStore } from '@/store/auth-store';
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 2,
+      staleTime: 1000 * 60,
+    },
+  },
+});
 
 // Keep the splash screen visible during initialization
 SplashScreen.preventAutoHideAsync().catch(() => {
@@ -24,12 +35,17 @@ SplashScreen.preventAutoHideAsync().catch(() => {
 
 export default function RootLayout() {
   const setResolved = useLanguageStore((s) => s.setResolved);
-  const isLoading = useLanguageStore((s) => s.isLoading);
+  const isLanguageLoading = useLanguageStore((s) => s.isLoading);
+  const initAuth = useAuthStore((s) => s.initAuth);
+  const isAuthLoading = useAuthStore((s) => s.isLoading);
 
   useEffect(() => {
     async function initialize() {
       try {
-        const { language, isFirstLaunch } = await resolveInitialLanguage();
+        const [{ language, isFirstLaunch }] = await Promise.all([
+          resolveInitialLanguage(),
+          initAuth(),
+        ]);
         await initI18n(language);
         setResolved(language, isFirstLaunch);
       } catch {
@@ -42,21 +58,23 @@ export default function RootLayout() {
     }
 
     void initialize();
-  }, [setResolved]);
+  }, [setResolved, initAuth]);
 
-  if (isLoading) {
+  if (isLanguageLoading || isAuthLoading) {
     // Splash screen is still visible — render nothing until initialized
     return null;
   }
 
   return (
-    <I18nextProvider i18n={i18n}>
-      <StatusBar style="dark" />
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="index" />
-        <Stack.Screen name="(auth)" />
-        <Stack.Screen name="(farmer)" />
-      </Stack>
-    </I18nextProvider>
+    <QueryClientProvider client={queryClient}>
+      <I18nextProvider i18n={i18n}>
+        <StatusBar style="dark" />
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="(auth)" />
+          <Stack.Screen name="(farmer)" />
+        </Stack>
+      </I18nextProvider>
+    </QueryClientProvider>
   );
 }
